@@ -1,0 +1,19 @@
+{
+  "name": "livetennisapi-starter-node",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Runnable break-point reactor built on the official Live Tennis API SDK. Paper-only — places no real bets.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node --env-file=.env index.js",
+    "test": "node --test"
+  },
+  "license": "MIT",
+  "author": "Live Tennis API",
+  "dependencies": {
+    "livetennisapi": "1.2.0"
+  }
+}
