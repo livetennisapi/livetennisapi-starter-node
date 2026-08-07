@@ -14,6 +14,6 @@
   "license": "MIT",
   "author": "Live Tennis API",
   "dependencies": {
-    "livetennisapi": "1.2.0"
+    "livetennisapi": "1.4.0"
   }
 }

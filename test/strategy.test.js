@@ -51,6 +51,40 @@ test('decide stands aside when the server is favoured', () => {
   assert.equal(order, null);
 });
 
+test('onScore reads the nested score payload (the wire shape) without throwing', () => {
+  // A real `score` frame nests its payload under `score` and carries the ULTRA
+  // model fields win_probability_p1 and danger on every frame.
+  const frame = {
+    type: 'score',
+    match_id: 42,
+    score: {
+      sets: [1, 0],
+      games: [[6, 2], [4, 0]],
+      points: ['40', '30'],
+      server: 1,
+      is_tiebreak: false,
+      timestamp: '2026-08-07T12:00:00Z',
+      win_probability_p1: 0.71,
+      danger: 0.22,
+    },
+  };
+  const prev = process.env.LOG_LEVEL;
+  process.env.LOG_LEVEL = 'DEBUG';
+  const lines = [];
+  const origLog = console.log;
+  console.log = (line) => lines.push(line);
+  try {
+    new Strategy().onScore(frame);
+  } finally {
+    console.log = origLog;
+    if (prev === undefined) delete process.env.LOG_LEVEL;
+    else process.env.LOG_LEVEL = prev;
+  }
+  assert.equal(lines.length, 1);
+  assert.match(lines[0], /sets=\[1,0\]/);
+  assert.match(lines[0], /win_prob_p1=0\.71/);
+});
+
 test('the execution seam refuses to place a real bet', () => {
   assert.throws(() => new Strategy()._execute({}), /NO real bets/);
 });

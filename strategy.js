@@ -18,10 +18,21 @@ export class Strategy {
 
   // -- event handlers ---------------------------------------------------------
 
-  /** A routine score change. Kept quiet so break points stand out. */
+  /**
+   * A routine score change. Kept quiet so break points stand out.
+   *
+   * The score payload nests under `event.score` (sets, games, points, server,
+   * is_tiebreak, timestamp) and carries the ULTRA model fields
+   * `win_probability_p1` and `danger` on every frame — `null` there means the
+   * model had no output for that state, not that the feed withheld it.
+   */
   onScore(event) {
     if (process.env.LOG_LEVEL === 'DEBUG') {
-      console.log(`score  match=${event.match_id}  sets=${JSON.stringify(event.sets)}`);
+      const score = event.score ?? {};
+      console.log(
+        `score  match=${event.match_id}  sets=${JSON.stringify(score.sets)}  ` +
+          `win_prob_p1=${score.win_probability_p1 ?? 'n/a'}`,
+      );
     }
   }
 
